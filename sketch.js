@@ -17,8 +17,8 @@ let minor_string = ['Cm7', 'Dm7', 'EbM7', 'Fm7', 'Gm7', 'AbM7', 'Bb7'];
 let current_scale = [];
 
 let buttonPositions = [];
-let canvasWidth = window.innerWidth - 30;
-let canvasHeight = window.innerHeight - 100;
+let canvasWidth = windowWidth - 30;
+let canvasHeight = windowHeight - 100;
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
@@ -159,7 +159,7 @@ function touchStarted(){
   startScreenPressController();
   console.log('aaaa', touches);
   touches.forEach(item => padMousePressController(item.x, item.y));
-  touches.forEach((item, index) => text(`${item.x},${item.y}`, 200, 200+index*20));
+  
 //   if (n == 1) {
 //     if (mouseX > 600 && mouseX < 770 && mouseY > 30 && mouseY < 80) {
 
@@ -181,8 +181,8 @@ function touchStarted(){
 //   }
 }
 
-function mouseReleased() {
-  padMouseReleaseController();
+function touchEnded() {
+  touches.forEach(item => padMouseReleaseController(item.x, item.y));
 }
 
 function padMousePressController(x, y) {
@@ -223,7 +223,6 @@ function padMouseReleaseController(x, y) {
     for (let i = 0 ; i < buttonPositions.length ; i++) {
       let buttonPos = buttonPositions[i];
       if (x > buttonPos.startX && x < buttonPos.endX && y > buttonPos.startY && y < buttonPos.endY) {
-        console.log('buttonClicked : ', i);
         polySynth.noteRelease(current_scale[i]);
         break;
       }
