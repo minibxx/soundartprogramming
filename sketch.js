@@ -151,14 +151,11 @@ function setScales() {
 function startScreenPressController() {
   if (n != 1) {
     n = 1;
-    userStartAudio();
-    let osc = new p5.TriOsc();
-    osc.start();
-    osc.freq(midiToFreq(80));
   }
 }
 
 function mousePressed(){
+  getAudioContext().resume();
   startScreenPressController();
   padMousePressController();
 //   if (n == 1) {
