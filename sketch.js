@@ -165,8 +165,8 @@ function drawRotation() {
   
   strokeWeight(0);
   fill('#A3C7D6');
-  if (rotationZ > 180) additionalFreq = parseInt((360 - rotationZ)/10);
-  else additionalFreq = parseInt((rotationZ/10)*(-1));
+  if (rotationZ > 180) additionalFreq = (360 - rotationZ)/10;
+  else additionalFreq = (rotationZ/10)*(-1);
   rect(30, canvasHeight - 70, canvasWidth - 100, 30);
   fill('#624F82')
   rect(30 + (canvasWidth - 100)/2 + additionalFreq*10, canvasHeight - 70, 10, 30);
@@ -217,6 +217,7 @@ function touchStarted(){
   touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
   currentTouches = touches;
   console.log('touchStarted : ', currentTouches);
+  return false;
 }
 
 function touchEnded() {
@@ -224,6 +225,7 @@ function touchEnded() {
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
   console.log('touchEnded : ', endedTouches);
+  return false;
 }
 
 function changeKeyButtonPress(touch) {
