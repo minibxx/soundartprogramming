@@ -141,19 +141,19 @@ function draw() {
 
 function drawRotation() {
   strokeWeight(0);
-  fill('#BBDEF0');
+  fill('#A3C7D6');
   volume = (rotationX+30)/70;
-  rect(canvasWidth - 100, 100, 30, canvasHeight - 130);
-  fill('#B9F942')
-  rect(canvasWidth - 100, 100, 30, canvasHeight - 130 - volume*(canvasHeight - 130));
+  rect(canvasWidth - 100, 200, 30, canvasHeight - 250);
+  fill('#624F82')
+  rect(canvasWidth - 100, 200, 30, canvasHeight - 250 - volume*(canvasHeight - 250));
 }
 
 function drawPad() {
   strokeWeight(0);
   fill('#A3C7D6');
-  var padWidth = canvasWidth-200;
+  var padWidth = canvasWidth-170;
   var padHeight = canvasHeight-300;
-  rect(30, 100, padWidth, padHeight);
+  rect(30, 200, padWidth, padHeight);
   
   var buttonFrameWidth = padWidth - 40;
   var buttonFrameHeight = padHeight - 40;
@@ -163,12 +163,12 @@ function drawPad() {
       let buttonWidth = buttonFrameWidth/4;
       let buttonHeight = buttonFrameHeight/4;
       let buttonStartX = 50+buttonWidth*j;
-      let buttonStartY = 120+buttonHeight*i;
+      let buttonStartY = 220+buttonHeight*i;
       let strokeSize = 10;
       
       stroke('#A3C7D6');
       strokeWeight(strokeSize);
-      if (pushedButtons[j*4 + i] === 1) {
+      if (pushedButtons[i*4 + j] === 1) {
         fill('#9F73AB');
       } else {
         fill('#624F82');  
