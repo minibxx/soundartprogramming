@@ -19,7 +19,7 @@ let buttonPositions = [];
 function setup() {
   createCanvas(displayWidth, displayHeight);
   n=0;
-  
+  userStartAudio();
   polySynth = new p5.PolySynth();
   arpFlag = 0;
 }
@@ -111,13 +111,6 @@ function drawPad() {
     }
   }
   buttonPositions = buttons;
-}
-
-function keyPressed() {
-  if (n != 1) {
-    n = 1;
-    sloop.start();
-  }
 }
 
 function mousePressed(){
