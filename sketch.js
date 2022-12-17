@@ -6,20 +6,32 @@ var arpflag;
 
 let poseNet;
 let poses = [];
-let isMajor = 0;
+let isMajor = 1;
 
-let major_scale = [261, 293, 329, 349, 391, 440, 493, 523, 587, 659, 698, 783, 880, 987];
+let major_scale = [];
 let major_string = ['CM7', 'Dm7', 'Em7', 'FM7', 'G7', 'Am7', 'Bm7'];
 
-let minor_scale = [261, 293, 311, 349, 391, 415, 466, 523, 587, 622, 698, 783, 830, 932];
+let minor_scale = [];
 let minor_string = ['Cm7', 'Dm7', 'EbM7', 'Fm7', 'Gm7', 'AbM7', 'Bb7'];
 
+let current_scale = [];
+
 let buttonPositions = [];
+let canvasWidth = window.innerWidth - 30;
+let canvasHeight = window.innerHeight - 100;
 
 function setup() {
-  createCanvas(displayWidth, displayHeight);
+  createCanvas(canvasWidth, canvasHeight);
   n=0;
   userStartAudio();
+  for (let i = 3; i < 7 ; i++) {
+    ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(item => {
+      major_scale.push(item + i);
+    });
+    ['A#','C', 'D', 'D#', 'F', 'G', 'G#'].forEach(item => {
+      minor_scale.push(item + i);
+    });
+  }
   polySynth = new p5.PolySynth();
   arpFlag = 0;
 }
@@ -29,15 +41,15 @@ function drawStartPage() {
   textSize(100);
   textStyle(BOLDITALIC);
   fill('#00A6A6');
-  text("Carpeggiator", displayWidth/2-500, displayHeight/2-400);
+  text("Carpeggiator", canvasWidth/2-300, canvasHeight/2-200);
   
   textSize(50);
   textStyle(ITALIC);
-  text("Made By Yubin", displayWidth/2-400, displayHeight/2-300);
+  text("Made By Yubin", canvasWidth/2-150, canvasHeight/2-100);
   
   textSize(40)
   textStyle(NORMAL);
-  text("Press any key to Start", displayWidth/2-400, displayHeight/2-200)
+  text("Touch the Screen to Start", canvasWidth/2-200, canvasHeight/2)
 }
 
 function modelReady() {
@@ -83,8 +95,8 @@ function draw() {
 function drawPad() {
   strokeWeight(0);
   fill('#BBDEF0');
-  var padWidth = displayWidth-60;
-  var padHeight = displayHeight-150;
+  var padWidth = canvasWidth-60;
+  var padHeight = canvasHeight-150;
   rect(30, 100, padWidth, padHeight);
   
   var buttonFrameWidth = padWidth - 40;
@@ -111,15 +123,40 @@ function drawPad() {
     }
   }
   buttonPositions = buttons;
+  
+  setScales();
 }
 
-function keyPressed() {
+function setScales() {
+  let baseScales;
+  if (isMajor == 1) {
+    baseScales = major_scale;
+  } else {
+    baseScales = minor_scale;
+  }
+  
+  let scales = [];
+  let startIndex = 2;
+  scales.push(baseScales[startIndex]);
+  scales.push(baseScales[startIndex+2]);
+  scales.push(baseScales[startIndex+4]);
+  scales.push(baseScales[startIndex+6]);
+  scales.push(baseScales[startIndex+7]);
+  scales.push(baseScales[startIndex+9]);
+  scales.push(baseScales[startIndex+11]);
+  scales.push(baseScales[startIndex+13]);
+  scales.push(baseScales[startIndex+14]);
+  current_scale = scales;
+}
+
+function startScreenPressController() {
   if (n != 1) {
     n = 1;
   }
 }
 
 function mousePressed(){
+  startScreenPressController();
   padMousePressController();
 //   if (n == 1) {
 //     if (mouseX > 600 && mouseX < 770 && mouseY > 30 && mouseY < 80) {
@@ -160,8 +197,9 @@ function padMousePressController() {
     for (let i = 0 ; i < buttonPositions.length ; i++) {
       let buttonPos = buttonPositions[i];
       if (mouseX > buttonPos.startX && mouseX < buttonPos.endX && mouseY > buttonPos.startY && mouseY < buttonPos.endY) {
-        console.log('buttonClicked : ', i);
-        polySynth.noteAttack(scale[i], velocity);
+        console.log('buttonClicked : ', current_scale[i]);
+        polySynth.noteAttack(current_scale[i], velocity);
+        // polySynth.noteAttack('C3', velocity);
         break;
       }
     }
@@ -183,7 +221,7 @@ function padMouseReleaseController() {
       let buttonPos = buttonPositions[i];
       if (mouseX > buttonPos.startX && mouseX < buttonPos.endX && mouseY > buttonPos.startY && mouseY < buttonPos.endY) {
         console.log('buttonClicked : ', i);
-        polySynth.noteRelease(scale[i]);
+        polySynth.noteRelease(current_scale[i]);
         break;
       }
     }
@@ -258,4 +296,3 @@ function drawChangeButton() {
   fill('#ffffff');  
   text('Change', 840, 65);  
 }
-
