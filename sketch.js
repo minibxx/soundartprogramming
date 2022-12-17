@@ -22,7 +22,7 @@ let canvasHeight = window.innerHeight - 100;
 
 let currentTouches = [];
 let endedTouches = [];
-let permission;
+let permission = false;
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
@@ -36,6 +36,14 @@ function setup() {
       minor_scale.push(item + i);
     });
   }
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    background(255, 0, 0);
+    button = createButton('click to iOS Sensor');
+    button.mousePressed(iosAccess);   
+  } else {
+    background(0, 255, 0);
+    text("is not a ios", 100, 100);
+  }
   polySynth = new p5.PolySynth();
   arpFlag = 0;
 }
@@ -44,13 +52,14 @@ function setup() {
 function startScreenPressController() {
   if (n != 1) {
     n = 1;
-    if (typeof DeviceMotionEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission().then(response => {
-        if (response === 'granted') permission = true;
-      })
-      .catch(console.error);
-    }
   }
+}
+
+function iosAccess() {
+  DeviceOrientationEvent.requestPermission().then(response => {
+    if (response === 'granted') permission = true;
+  })
+  .catch(console.error);
 }
 
 function drawStartPage() {
@@ -75,7 +84,7 @@ function modelReady() {
 
 
 function draw() {
-  if (n === 0) {
+  if (n === 0 && permission) {
     drawStartPage();
   }
   if(n === 1){
@@ -115,8 +124,6 @@ function drawRotation() {
   text(`rotationX: ${rotationX}`, 100, 100);
   text(`rotationY: ${rotationY}`, 100, 200);
   text(`rotationZ: ${rotationZ}`, 100, 300);
-  text(`currentTouches: ${currentTouches.map(item => item.id).join(',')}`, 100, 400);
-  text(`endedTouches: ${endedTouches.map(item => item.id).join(',')}`, 100, 500);
 }
 
 function drawPad() {
@@ -191,6 +198,7 @@ function touchStarted(){
   startScreenPressController();
   currentTouches = touches;
   currentTouches.forEach(item => padMousePressController(item.x, item.y));
+  console.log('touchStarted : ', currentTouches);
   
 //   if (n == 1) {
 //     if (mouseX > 600 && mouseX < 770 && mouseY > 30 && mouseY < 80) {
@@ -217,6 +225,7 @@ function touchEnded() {
   endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
+  console.log('touchEnded : ', endedTouches);
 }
 
 function padMousePressController(x, y) {
