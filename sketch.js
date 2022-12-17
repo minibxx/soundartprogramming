@@ -54,7 +54,7 @@ function setup() {
   for (let i = 0; i < 4 ; i++) {
     [36, 40, 43, 47].forEach(item => {
       major_scale.push(new p5.Oscillator(midiToFreq(item+12*i), 'sine'));
-      major_scale_freq.push(midiToFreq(item+12*i));
+      major_scale_freq.push(item+12*i);
     });
   }
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
@@ -114,29 +114,27 @@ function draw() {
     drawRotation();
     major_scale.forEach((item, index) => {
       item.amp(volume);
-      item.freq(major_scale_freq[index] + additionalFreq);
+      item.freq(midiToFreq(major_scale_freq[index] + additionalFreq));
     });
     textSize(60);
     textStyle(BOLDITALIC);
     fill('#00A6A6');
     text("PitchPad", 20, 70);
     
-//     strokeWeight(0);
-//     fill('#F49F0A');
-//     rect(0, 80, 200, 50)
-//     textSize(40)
-//     textStyle(ITALIC);
-//     fill('#00A6A6');
-//     if (isMajor == 1) {
-//       text("Major Key", 20, 110);  
-//     } else {
-//       text("Minor Key", 20, 110);
-//     }
+    
+    textSize(40)
+    textStyle(ITALIC);
+    fill('#00A6A6');
+    if (isMajor == 1) {
+      text("Major Key", 300, 70);  
+    } else {
+      text("Minor Key", 300, 70);
+    }
     
     
     
 //     drawStartButton();
-//     drawChangeButton();
+    drawChangeButton();
     
     
 //     image(c, 0, 200);
@@ -156,8 +154,8 @@ function drawRotation() {
   
   strokeWeight(0);
   fill('#A3C7D6');
-  additionalFreq = rotationZ;
-  console.log(`rotationZ: ${rotationZ}`);
+  if (rotationZ > 180) additionalFreq = (360 - rotationZ)/5;
+  else additionalFreq = (rotationZ/5)*(-1);
   rect(30, canvasHeight - 70, canvasWidth - 100, 30);
   fill('#624F82')
   rect(30 + (canvasWidth - 100)/2 + additionalFreq, canvasHeight - 70, 10, 30);
@@ -301,25 +299,6 @@ function drawChordString() {
   textSize(30);
   fill('#445E93');
   text('VOLUME', 1060, 175);
-}
-
-function drawStartButton() {
-  strokeWeight(0);
-  if (sloop.isPlaying) {
-    fill('rgb(255, 0, 0)');  
-  } else {
-    fill('#00A6A6');
-  }
-  
-  rect(600, 30, 170, 50, 20);
-  textStyle(BOLD);
-  textSize(30);
-  fill('#ffffff');  
-  if (sloop.isPlaying) {
-    text('Stop', 650, 65);
-  } else {
-    text('Start', 650, 65);  
-  }
 }
 
 function drawChangeButton() {
