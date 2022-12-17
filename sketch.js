@@ -17,11 +17,15 @@ let minor_string = ['Cm7', 'Dm7', 'EbM7', 'Fm7', 'Gm7', 'AbM7', 'Bb7'];
 let current_scale = [];
 
 let buttonPositions = [];
-let canvasWidth = windowWidth - 30;
-let canvasHeight = windowHeight - 100;
+let canvasWidth = window.innerWidth - 30;
+let canvasHeight = window.innerHeight - 100;
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission();
+  }
+  
   n=0;
   for (let i = 3; i < 7 ; i++) {
     ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(item => {
@@ -62,6 +66,7 @@ function draw() {
   }
   if(n === 1){
     drawPad();
+    drawRotation();
 //     textSize(60);
 //     textStyle(BOLDITALIC);
 //     fill('#00A6A6');
@@ -89,6 +94,13 @@ function draw() {
 //     drawKeypoints();
 //     drawChordString();
   }
+}
+
+function drawRotation() {
+  textSize(72);
+  text(`rotationX: ${rotationX}`, 100, 100);
+  text(`rotationY: ${rotationY}`, 100, 200);
+  text(`rotationZ: ${rotationZ}`, 100, 300);
 }
 
 function drawPad() {
