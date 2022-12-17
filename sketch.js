@@ -24,16 +24,16 @@ let currentTouches = [];
 let endedTouches = [];
 let permission = false;
 
+let volume = 0;
+let env = new p5.Envelope();
+
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
   
   n=0;
-  for (let i = 3; i < 7 ; i++) {
-    ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(item => {
-      major_scale.push(item + i);
-    });
-    ['A#','C', 'D', 'D#', 'F', 'G', 'G#'].forEach(item => {
-      minor_scale.push(item + i);
+  for (let i = 0; i < 4 ; i++) {
+    [36, 40, 43, 47].forEach(item => {
+      major_scale.push(new p5.Oscillator(midiToFreq(item+12*i), 'sine'));
     });
   }
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
@@ -90,6 +90,7 @@ function draw() {
   if(n === 1){
     drawPad();
     drawRotation();
+    major_scale.forEach(item => item.amp(volume));
 //     textSize(60);
 //     textStyle(BOLDITALIC);
 //     fill('#00A6A6');
@@ -124,13 +125,18 @@ function drawRotation() {
   text(`rotationX: ${rotationX}`, 100, 100);
   text(`rotationY: ${rotationY}`, 100, 200);
   text(`rotationZ: ${rotationZ}`, 100, 300);
+  strokeWeight(0);
+  fill('#BBDEF0');
+  volume = (rotationX+30)/70;
+  rect(canvasWidth - 100, 100, 30, canvasHeight - 130);
+  rect(canvasWidth - 100, 100, 30, volume*(canvasHeight - 130));
 }
 
 function drawPad() {
   strokeWeight(0);
   fill('#BBDEF0');
-  var padWidth = canvasWidth-60;
-  var padHeight = canvasHeight-150;
+  var padWidth = canvasWidth-200;
+  var padHeight = canvasHeight-300;
   rect(30, 100, padWidth, padHeight);
   
   var buttonFrameWidth = padWidth - 40;
@@ -158,7 +164,7 @@ function drawPad() {
   }
   buttonPositions = buttons;
   
-  setScales();
+  // setScales();
 }
 
 function setScales() {
@@ -196,9 +202,9 @@ function setScales() {
 function touchStarted(){
   getAudioContext().resume();
   startScreenPressController();
+  touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
   currentTouches = touches;
-  currentTouches.forEach(item => padMousePressController(item.x, item.y));
-  console.log('touchStarted : ', currentTouches.map(item => item.id).join(','));
+  console.log('touchStarted : ', currentTouches);
   
 //   if (n == 1) {
 //     if (mouseX > 600 && mouseX < 770 && mouseY > 30 && mouseY < 80) {
@@ -225,7 +231,7 @@ function touchEnded() {
   endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
-  console.log('touchEnded : ', endedTouches.map(item => item.id).join(','));
+  console.log('touchEnded : ', endedTouches);
 }
 
 function padMousePressController(x, y) {
@@ -244,8 +250,8 @@ function padMousePressController(x, y) {
       let buttonPos = buttonPositions[i];
       if (x > buttonPos.startX && x < buttonPos.endX && y > buttonPos.startY && y < buttonPos.endY) {
         console.log('buttonClicked : ', current_scale[i]);
-        polySynth.noteAttack(current_scale[i], velocity);
-        // polySynth.noteAttack('C3', velocity);
+        // polySynth.noteAttack(current_scale[i], velocity);
+        scale[i].start();
         break;
       }
     }
@@ -266,7 +272,8 @@ function padMouseReleaseController(x, y) {
     for (let i = 0 ; i < buttonPositions.length ; i++) {
       let buttonPos = buttonPositions[i];
       if (x > buttonPos.startX && x < buttonPos.endX && y > buttonPos.startY && y < buttonPos.endY) {
-        polySynth.noteRelease(current_scale[i]);
+        // polySynth.noteRelease(current_scale[i]);
+        scale[i].stop();
         break;
       }
     }
