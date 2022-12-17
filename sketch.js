@@ -3,7 +3,7 @@ var wave;
 var button;
 function setup(){
   createCanvas(720,256);
-  wave = new p3.Oscillator();
+  wave = new p5.Oscillator();
   wave.setType('sine');
   wave.start();
   wave.freq(440);
