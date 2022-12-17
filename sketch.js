@@ -21,12 +21,11 @@ let canvasWidth = window.innerWidth - 30;
 let canvasHeight = window.innerHeight - 100;
 
 let currentTouches = [];
+let endedTouches = [];
+let permission;
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
-  if (typeof DeviceMotionEvent.requestPermission === 'function') {
-    DeviceOrientationEvent.requestPermission();
-  }
   
   n=0;
   for (let i = 3; i < 7 ; i++) {
@@ -39,6 +38,20 @@ function setup() {
   }
   polySynth = new p5.PolySynth();
   arpFlag = 0;
+}
+
+
+function startScreenPressController() {
+  if (n != 1) {
+    n = 1;
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission().then(response => {
+        if (response === 'granted') permission = true;
+      })
+      .catch(console.error);
+      ;
+    }
+  }
 }
 
 function drawStartPage() {
@@ -103,6 +116,8 @@ function drawRotation() {
   text(`rotationX: ${rotationX}`, 100, 100);
   text(`rotationY: ${rotationY}`, 100, 200);
   text(`rotationZ: ${rotationZ}`, 100, 300);
+  text(`currentTouches: ${currentTouches.map(item => item.id).join(',')}`, 100, 400);
+  text(`endedTouches: ${endedTouches.map(item => item.id).join(',')}`, 100, 500);
 }
 
 function drawPad() {
@@ -172,12 +187,6 @@ function setScales() {
   current_scale = scales;
 }
 
-function startScreenPressController() {
-  if (n != 1) {
-    n = 1;
-  }
-}
-
 function touchStarted(){
   getAudioContext().resume();
   startScreenPressController();
@@ -206,7 +215,7 @@ function touchStarted(){
 }
 
 function touchEnded() {
-  const endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
+  endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
 }
