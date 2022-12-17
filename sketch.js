@@ -40,7 +40,7 @@ function drawStartPage() {
   textSize(100);
   textStyle(BOLDITALIC);
   fill('#00A6A6');
-  text("Carpeggiator", canvasWidth/2-300, canvasHeight/2-200);
+  text("Carpeggiator2", canvasWidth/2-300, canvasHeight/2-200);
   
   textSize(50);
   textStyle(ITALIC);
