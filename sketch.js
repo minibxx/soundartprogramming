@@ -26,6 +26,24 @@ let permission = false;
 
 let volume = 0;
 let env = new p5.Envelope();
+let pushedButtons = {
+  '0': 0,
+  '1': 0,
+  '2': 0,
+  '3': 0,
+  '4': 0,
+  '5': 0,
+  '6': 0,
+  '7': 0,
+  '8': 0,
+  '9': 0,
+  '10': 0,
+  '11': 0,
+  '12': 0,
+  '13': 0,
+  '14': 0,
+  '15': 0,
+};
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
@@ -37,12 +55,13 @@ function setup() {
     });
   }
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
-    background(255, 0, 0);
+    background(63, 59, 108);
     button = createButton('click to iOS Sensor');
     button.mousePressed(iosAccess);   
   } else {
-    background(0, 255, 0);
+    background(63, 59, 108);
     text("is not a ios", 100, 100);
+    permission = true;
   }
   polySynth = new p5.PolySynth();
   arpFlag = 0;
@@ -50,7 +69,7 @@ function setup() {
 
 
 function startScreenPressController() {
-  if (n != 1) {
+  if (n != 1 && permission) {
     n = 1;
   }
 }
@@ -63,7 +82,7 @@ function iosAccess() {
 }
 
 function drawStartPage() {
-  background('#F49F0A');
+  background('#3F3B6C');
   textSize(100);
   textStyle(BOLDITALIC);
   fill('#00A6A6');
@@ -131,7 +150,7 @@ function drawRotation() {
 
 function drawPad() {
   strokeWeight(0);
-  fill('#BBDEF0');
+  fill('#A3C7D6');
   var padWidth = canvasWidth-200;
   var padHeight = canvasHeight-300;
   rect(30, 100, padWidth, padHeight);
@@ -147,9 +166,14 @@ function drawPad() {
       let buttonStartY = 120+buttonHeight*i;
       let strokeSize = 10;
       
-      stroke('#BBDEF0');
+      stroke('#A3C7D6');
       strokeWeight(strokeSize);
-      fill('#B9F942');
+      if (pushedButtons[j*4 + i] === 1) {
+        fill('#9F73AB');
+      } else {
+        fill('#624F82');  
+      }
+      
       rect(buttonStartX, buttonStartY, buttonWidth, buttonHeight);
       buttons.push({
         startX: buttonStartX + strokeSize,
@@ -160,40 +184,6 @@ function drawPad() {
     }
   }
   buttonPositions = buttons;
-  
-  // setScales();
-}
-
-function setScales() {
-  let baseScales;
-  if (isMajor == 1) {
-    baseScales = major_scale;
-  } else {
-    baseScales = minor_scale;
-  }
-  
-  let scales = [];
-  let startIndex = 2;
-  scales.push(baseScales[startIndex]);
-  scales.push(baseScales[startIndex+2]);
-  scales.push(baseScales[startIndex+4]);
-  scales.push(baseScales[startIndex+6]);
-  
-  scales.push(baseScales[startIndex+7]);
-  scales.push(baseScales[startIndex+9]);
-  scales.push(baseScales[startIndex+11]);
-  scales.push(baseScales[startIndex+13]);
-  
-  scales.push(baseScales[startIndex+14]);
-  scales.push(baseScales[startIndex+16]);
-  scales.push(baseScales[startIndex+18]);
-  scales.push(baseScales[startIndex+20]);
-  
-  scales.push(baseScales[startIndex+21]);
-  scales.push(baseScales[startIndex+23]);
-  scales.push(baseScales[startIndex+25]);
-  scales.push(baseScales[startIndex+27]);
-  current_scale = scales;
 }
 
 function touchStarted(){
@@ -202,26 +192,6 @@ function touchStarted(){
   touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
   currentTouches = touches;
   console.log('touchStarted : ', currentTouches);
-  
-//   if (n == 1) {
-//     if (mouseX > 600 && mouseX < 770 && mouseY > 30 && mouseY < 80) {
-
-//       if (sloop.isPlaying) {
-//         sloop.pause();
-//       } else {
-//         sloop.start();
-//       }
-//     } else if (mouseX > 800 && mouseX < 980 && mouseY > 30 && mouseY < 80) {
-//       if (sloop.isPlaying) {
-//         sloop.pause();
-//       }
-//       if (isMajor == 1) {
-//         isMajor = 0;
-//       } else {
-//         isMajor = 1;
-//       }
-//     }    
-//   }
 }
 
 function touchEnded() {
@@ -242,13 +212,13 @@ function padMousePressController(x, y) {
     
     let velocity = 0.5;
     let duration = 1;
-    console.log(x, y);
     for (let i = 0 ; i < buttonPositions.length ; i++) {
       let buttonPos = buttonPositions[i];
       if (x > buttonPos.startX && x < buttonPos.endX && y > buttonPos.startY && y < buttonPos.endY) {
         console.log('buttonClicked : ', current_scale[i]);
         // polySynth.noteAttack(current_scale[i], velocity);
         scale[i].start();
+        pushedButtons[i] = 1;
         break;
       }
     }
@@ -271,6 +241,7 @@ function padMouseReleaseController(x, y) {
       if (x > buttonPos.startX && x < buttonPos.endX && y > buttonPos.startY && y < buttonPos.endY) {
         // polySynth.noteRelease(current_scale[i]);
         scale[i].stop();
+        pushedButtons[i] = 0;
         break;
       }
     }
