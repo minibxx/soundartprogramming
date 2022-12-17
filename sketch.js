@@ -62,23 +62,27 @@ function setup() {
       minor_scale_freq.push(item+12*i);
     });
   }
-  if (typeof DeviceMotionEvent.requestPermission === 'function') {
-    background(63, 59, 108);
-    button = createButton('click to iOS Sensor');
-    button.mousePressed(iosAccess);   
-  } else {
-    background(63, 59, 108);
-    text("is not a ios", 100, 100);
-    permission = true;
-  }
+  // if (typeof DeviceMotionEvent.requestPermission === 'function') {
+  //   background(63, 59, 108);
+  //   button = createButton('click to iOS Sensor');
+  //   button.mousePressed(iosAccess);   
+  // } else {
+  //   background(63, 59, 108);
+  //   text("is not a ios", 100, 100);
+  //   permission = true;
+  // }
   polySynth = new p5.PolySynth();
   arpFlag = 0;
 }
 
 
 function startScreenPressController() {
-  if (n != 1 && permission) {
-    n = 1;
+  if (n != 1) {
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+      iosAccess();
+    } else {
+      permission = true;
+    }
   }
 }
 
@@ -111,8 +115,9 @@ function modelReady() {
 
 
 function draw() {
-  if (n === 0 && permission) {
-    drawStartPage();
+  if (n === 0) {
+    if (!permission) drawStartPage();
+    else n = 1;
   }
   if(n === 1){
     drawPad();
@@ -132,8 +137,9 @@ function draw() {
     fill('#00A6A6');
     text("PitchPad", 20, 70);
     
-    
-    textSize(40)
+    fill('#3F3B6C');
+    rect(290, 20, 200, 70);
+    textSize(40);
     textStyle(ITALIC);
     fill('#00A6A6');
     if (isMajor == 1) {
@@ -229,7 +235,7 @@ function touchEnded() {
 }
 
 function changeKeyButtonPress(touch) {
-  if (touch.x > 800 && touch.x < 980 && touch.y > 30 && touch.y <50) {
+  if (touch.x > 500 && touch.x < 680 && touch.y > 30 && touch.y < 80) {
     if (isMajor) isMajor = 0;
     else isMajor = 1;
   }
@@ -325,10 +331,9 @@ function drawChordString() {
 function drawChangeButton() {
   strokeWeight(0);
   fill('#00A6A6');
-  rect(800, 30, 180, 50, 20);
+  rect(500, 30, 180, 50, 20);
   textStyle(BOLD);
   textSize(30);
   fill('#ffffff');  
-  text('Change', 840, 65);  
+  text('Change', 540, 65);  
 }
-
