@@ -113,6 +113,12 @@ function drawPad() {
   buttonPositions = buttons;
 }
 
+function keyPressed() {
+  if (n != 1) {
+    n = 1;
+  }
+}
+
 function mousePressed(){
   padMousePressController();
 //   if (n == 1) {
