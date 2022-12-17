@@ -13,6 +13,7 @@ let major_scale_freq = [];
 let major_string = ['CM7', 'Dm7', 'Em7', 'FM7', 'G7', 'Am7', 'Bm7'];
 
 let minor_scale = [];
+let minor_scale_freq = [];
 let minor_string = ['Cm7', 'Dm7', 'EbM7', 'Fm7', 'Gm7', 'AbM7', 'Bb7'];
 
 let current_scale = [];
@@ -55,6 +56,10 @@ function setup() {
     [36, 40, 43, 47].forEach(item => {
       major_scale.push(new p5.Oscillator(midiToFreq(item+12*i), 'sine'));
       major_scale_freq.push(item+12*i);
+    });
+    [36, 39, 43, 46].forEach(item => {
+      minor_scale.push(new p5.Oscillator(midiToFreq(item+12*i), 'sine'));
+      minor_scale_freq.push(item+12*i);
     });
   }
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
@@ -112,7 +117,13 @@ function draw() {
   if(n === 1){
     drawPad();
     drawRotation();
-    major_scale.forEach((item, index) => {
+    let scale;
+    if (isMajor == 1) {
+      scale = major_scale;
+    } else {
+      scale = minor_scale;
+    }
+    scale.forEach((item, index) => {
       item.amp(volume);
       item.freq(midiToFreq(major_scale_freq[index] + additionalFreq));
     });
@@ -154,11 +165,11 @@ function drawRotation() {
   
   strokeWeight(0);
   fill('#A3C7D6');
-  if (rotationZ > 180) additionalFreq = (360 - rotationZ)/5;
-  else additionalFreq = (rotationZ/5)*(-1);
+  if (rotationZ > 180) additionalFreq = parseInt((360 - rotationZ)/10);
+  else additionalFreq = parseInt((rotationZ/10)*(-1));
   rect(30, canvasHeight - 70, canvasWidth - 100, 30);
   fill('#624F82')
-  rect(30 + (canvasWidth - 100)/2 + additionalFreq, canvasHeight - 70, 10, 30);
+  rect(30 + (canvasWidth - 100)/2 + additionalFreq*10, canvasHeight - 70, 10, 30);
 }
 
 function drawPad() {
@@ -202,6 +213,7 @@ function drawPad() {
 function touchStarted(){
   getAudioContext().resume();
   startScreenPressController();
+  if(touches[0]) changeKeyButtonPress(touches[0]);
   touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
   currentTouches = touches;
   console.log('touchStarted : ', currentTouches);
@@ -212,6 +224,13 @@ function touchEnded() {
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
   console.log('touchEnded : ', endedTouches);
+}
+
+function changeKeyButtonPress(touch) {
+  if (touch.x > 800 && touch.x < 980 && touch.y > 30 && touch.y <50) {
+    if (isMajor) isMajor = 0;
+    else isMajor = 1;
+  }
 }
 
 function padMousePressController(x, y) {
@@ -310,3 +329,4 @@ function drawChangeButton() {
   fill('#ffffff');  
   text('Change', 840, 65);  
 }
+
