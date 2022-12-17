@@ -198,6 +198,7 @@ function touchStarted(){
 function touchEnded() {
   const endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
+  currentTouches = touches;
 }
 
 function padMousePressController(x, y) {
