@@ -89,7 +89,7 @@ function drawStartPage() {
   textSize(100);
   textStyle(BOLDITALIC);
   fill('#00A6A6');
-  text("Carpeggiator2", canvasWidth/2-300, canvasHeight/2-200);
+  text("PitchPad", canvasWidth/2-200, canvasHeight/2-200);
   
   textSize(50);
   textStyle(ITALIC);
@@ -116,10 +116,10 @@ function draw() {
       item.amp(volume);
       item.freq(major_scale_freq[index] + additionalFreq);
     });
-//     textSize(60);
-//     textStyle(BOLDITALIC);
-//     fill('#00A6A6');
-//     text("Carpeggiator", 20, 70);
+    textSize(60);
+    textStyle(BOLDITALIC);
+    fill('#00A6A6');
+    text("PitchPad", 20, 70);
     
 //     strokeWeight(0);
 //     fill('#F49F0A');
@@ -157,6 +157,7 @@ function drawRotation() {
   strokeWeight(0);
   fill('#A3C7D6');
   additionalFreq = rotationZ;
+  console.log(`rotationZ: ${rotationZ}`);
   rect(30, canvasHeight - 70, canvasWidth - 100, 30);
   fill('#624F82')
   rect(30 + (canvasWidth - 100)/2 + additionalFreq, canvasHeight - 70, 10, 30);
