@@ -198,7 +198,7 @@ function touchStarted(){
   startScreenPressController();
   currentTouches = touches;
   currentTouches.forEach(item => padMousePressController(item.x, item.y));
-  console.log('touchStarted : ', currentTouches);
+  console.log('touchStarted : ', currentTouches.map(item => item.id).join(','));
   
 //   if (n == 1) {
 //     if (mouseX > 600 && mouseX < 770 && mouseY > 30 && mouseY < 80) {
@@ -225,7 +225,7 @@ function touchEnded() {
   endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
-  console.log('touchEnded : ', endedTouches);
+  console.log('touchEnded : ', endedTouches.map(item => item.id).join(','));
 }
 
 function padMousePressController(x, y) {
