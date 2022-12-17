@@ -151,8 +151,10 @@ function setScales() {
 
 function startScreenPressController() {
   if (n != 1) {
-    n = 1;
-    polySynth.noteAttack('C5');
+    n = 1; 
+    let osc = new p5.TriOsc();
+    osc.start();
+    osc.freq(midiToFreq(80));
   }
 }
 
