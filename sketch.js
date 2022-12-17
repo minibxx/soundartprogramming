@@ -9,6 +9,7 @@ let poses = [];
 let isMajor = 1;
 
 let major_scale = [];
+let major_scale_freq = [];
 let major_string = ['CM7', 'Dm7', 'Em7', 'FM7', 'G7', 'Am7', 'Bm7'];
 
 let minor_scale = [];
@@ -44,6 +45,7 @@ let pushedButtons = {
   '14': 0,
   '15': 0,
 };
+let additionalFreq = 0;
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
@@ -52,6 +54,7 @@ function setup() {
   for (let i = 0; i < 4 ; i++) {
     [36, 40, 43, 47].forEach(item => {
       major_scale.push(new p5.Oscillator(midiToFreq(item+12*i), 'sine'));
+      major_scale_freq.push(midiToFreq(item+12*i));
     });
   }
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
@@ -109,7 +112,10 @@ function draw() {
   if(n === 1){
     drawPad();
     drawRotation();
-    major_scale.forEach(item => item.amp(volume));
+    major_scale.forEach((item, index) => {
+      item.amp(volume);
+      item.freq(major_scale_freq[index] + additionalFreq);
+    });
 //     textSize(60);
 //     textStyle(BOLDITALIC);
 //     fill('#00A6A6');
@@ -146,6 +152,14 @@ function drawRotation() {
   rect(canvasWidth - 100, 200, 30, canvasHeight - 250);
   fill('#624F82')
   rect(canvasWidth - 100, 200, 30, canvasHeight - 250 - volume*(canvasHeight - 250));
+  
+  
+  strokeWeight(0);
+  fill('#A3C7D6');
+  additionalFreq = rotationZ;
+  rect(30, canvasHeight - 70, canvasWidth - 100, 30);
+  fill('#624F82')
+  rect(30 + (canvasWidth - 100)/2 + additionalFreq, canvasHeight - 70, 10, 30);
 }
 
 function drawPad() {
