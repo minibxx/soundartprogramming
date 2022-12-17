@@ -121,15 +121,12 @@ function draw() {
 }
 
 function drawRotation() {
-  textSize(72);
-  text(`rotationX: ${rotationX}`, 100, 100);
-  text(`rotationY: ${rotationY}`, 100, 200);
-  text(`rotationZ: ${rotationZ}`, 100, 300);
   strokeWeight(0);
   fill('#BBDEF0');
   volume = (rotationX+30)/70;
   rect(canvasWidth - 100, 100, 30, canvasHeight - 130);
-  rect(canvasWidth - 100, 100, 30, volume*(canvasHeight - 130));
+  fill('#B9F942')
+  rect(canvasWidth - 100, 100, 30, canvasHeight - 130 - volume*(canvasHeight - 130));
 }
 
 function drawPad() {
