@@ -154,10 +154,12 @@ function startScreenPressController() {
   }
 }
 
-function mousePressed(){
+function touchStarted(){
   getAudioContext().resume();
   startScreenPressController();
-  padMousePressController();
+  console.log('aaaa', touches);
+  touches.forEach(item => padMousePressController(item.x, item.y));
+  touches.forEach((item, index) => text(`${item.x},${item.y}`, 200, 200+index*20));
 //   if (n == 1) {
 //     if (mouseX > 600 && mouseX < 770 && mouseY > 30 && mouseY < 80) {
 
@@ -183,7 +185,7 @@ function mouseReleased() {
   padMouseReleaseController();
 }
 
-function padMousePressController() {
+function padMousePressController(x, y) {
   if (n === 1) {
     let scale;
     if (isMajor == 1) {
@@ -194,9 +196,10 @@ function padMousePressController() {
     
     let velocity = 0.5;
     let duration = 1;
+    console.log(x, y);
     for (let i = 0 ; i < buttonPositions.length ; i++) {
       let buttonPos = buttonPositions[i];
-      if (mouseX > buttonPos.startX && mouseX < buttonPos.endX && mouseY > buttonPos.startY && mouseY < buttonPos.endY) {
+      if (x > buttonPos.startX && x < buttonPos.endX && y > buttonPos.startY && y < buttonPos.endY) {
         console.log('buttonClicked : ', current_scale[i]);
         polySynth.noteAttack(current_scale[i], velocity);
         // polySynth.noteAttack('C3', velocity);
@@ -206,7 +209,7 @@ function padMousePressController() {
   }
 }
 
-function padMouseReleaseController() {
+function padMouseReleaseController(x, y) {
   if (n === 1) {
     let scale;
     if (isMajor == 1) {
@@ -219,7 +222,7 @@ function padMouseReleaseController() {
     let duration = 1;
     for (let i = 0 ; i < buttonPositions.length ; i++) {
       let buttonPos = buttonPositions[i];
-      if (mouseX > buttonPos.startX && mouseX < buttonPos.endX && mouseY > buttonPos.startY && mouseY < buttonPos.endY) {
+      if (x > buttonPos.startX && x < buttonPos.endX && y > buttonPos.startY && y < buttonPos.endY) {
         console.log('buttonClicked : ', i);
         polySynth.noteRelease(current_scale[i]);
         break;
