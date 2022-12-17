@@ -152,6 +152,7 @@ function setScales() {
 function startScreenPressController() {
   if (n != 1) {
     n = 1;
+    polySynth.noteAttack('C5');
   }
 }
 
