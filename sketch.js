@@ -62,27 +62,23 @@ function setup() {
       minor_scale_freq.push(item+12*i);
     });
   }
-  // if (typeof DeviceMotionEvent.requestPermission === 'function') {
-  //   background(63, 59, 108);
-  //   button = createButton('click to iOS Sensor');
-  //   button.mousePressed(iosAccess);   
-  // } else {
-  //   background(63, 59, 108);
-  //   text("is not a ios", 100, 100);
-  //   permission = true;
-  // }
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    background(63, 59, 108);
+    button = createButton('click to iOS Sensor');
+    button.mousePressed(iosAccess);   
+  } else {
+    background(63, 59, 108);
+    text("is not a ios", 100, 100);
+    permission = true;
+  }
   polySynth = new p5.PolySynth();
   arpFlag = 0;
 }
 
 
 function startScreenPressController() {
-  if (n != 1) {
-    if (typeof DeviceMotionEvent.requestPermission === 'function') {
-      iosAccess();
-    } else {
-      permission = true;
-    }
+  if (n != 1 && permission) {
+    n = 1;
   }
 }
 
@@ -115,9 +111,8 @@ function modelReady() {
 
 
 function draw() {
-  if (n === 0) {
-    if (!permission) drawStartPage();
-    else n = 1;
+  if (n === 0 && permission) {
+    drawStartPage();
   }
   if(n === 1){
     drawPad();
@@ -223,7 +218,9 @@ function touchStarted(){
   touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
   currentTouches = touches;
   console.log('touchStarted : ', currentTouches);
-  return false;
+  if (permission) {
+    return false;  
+  }
 }
 
 function touchEnded() {
@@ -231,7 +228,9 @@ function touchEnded() {
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
   console.log('touchEnded : ', endedTouches);
-  return false;
+  if (permission) {
+    return false;  
+  }
 }
 
 function changeKeyButtonPress(touch) {
