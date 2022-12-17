@@ -115,10 +115,10 @@ function drawPad() {
   var buttonFrameWidth = padWidth - 40;
   var buttonFrameHeight = padHeight - 40;
   let buttons = [];
-  for (var i = 0 ; i < 3 ; i++) {
-    for (var j = 0 ; j < 3 ; j++) {
-      let buttonWidth = buttonFrameWidth/3;
-      let buttonHeight = buttonFrameHeight/3;
+  for (var i = 0 ; i < 4 ; i++) {
+    for (var j = 0 ; j < 4 ; j++) {
+      let buttonWidth = buttonFrameWidth/4;
+      let buttonHeight = buttonFrameHeight/4;
       let buttonStartX = 50+buttonWidth*j;
       let buttonStartY = 120+buttonHeight*i;
       let strokeSize = 10;
@@ -154,11 +154,21 @@ function setScales() {
   scales.push(baseScales[startIndex+2]);
   scales.push(baseScales[startIndex+4]);
   scales.push(baseScales[startIndex+6]);
+  
   scales.push(baseScales[startIndex+7]);
   scales.push(baseScales[startIndex+9]);
   scales.push(baseScales[startIndex+11]);
   scales.push(baseScales[startIndex+13]);
+  
   scales.push(baseScales[startIndex+14]);
+  scales.push(baseScales[startIndex+16]);
+  scales.push(baseScales[startIndex+18]);
+  scales.push(baseScales[startIndex+20]);
+  
+  scales.push(baseScales[startIndex+21]);
+  scales.push(baseScales[startIndex+23]);
+  scales.push(baseScales[startIndex+25]);
+  scales.push(baseScales[startIndex+27]);
   current_scale = scales;
 }
 
