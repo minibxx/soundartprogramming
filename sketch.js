@@ -49,7 +49,6 @@ function startScreenPressController() {
         if (response === 'granted') permission = true;
       })
       .catch(console.error);
-      ;
     }
   }
 }
