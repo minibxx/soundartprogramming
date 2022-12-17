@@ -1,5 +1,7 @@
 var wave;
 var button;
+var playing;
+
 function setup() {
 createCanvas(720, 256);
 wave = new p5.Oscillator();
