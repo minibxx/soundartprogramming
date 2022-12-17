@@ -23,7 +23,6 @@ let canvasHeight = window.innerHeight - 100;
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
   n=0;
-  userStartAudio();
   for (let i = 3; i < 7 ; i++) {
     ['A', 'B', 'C', 'D', 'E', 'F', 'G'].forEach(item => {
       major_scale.push(item + i);
@@ -53,7 +52,7 @@ function drawStartPage() {
 }
 
 function modelReady() {
-  select('#status').html('Model Loaded');
+  select('#status').html('Model Loaded123');
 }
 
 
@@ -151,7 +150,8 @@ function setScales() {
 
 function startScreenPressController() {
   if (n != 1) {
-    n = 1; 
+    n = 1;
+    userStartAudio();
     let osc = new p5.TriOsc();
     osc.start();
     osc.freq(midiToFreq(80));
