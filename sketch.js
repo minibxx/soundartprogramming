@@ -49,6 +49,14 @@ let pushedButtons = {
 let additionalFreq = 0;
 let pitchLock = true;
 
+let colorSet = {
+  text: '#00A6A6',
+  background: '#3F3B6C',
+  first: '#A3C7D6',
+  second: '#624F82',
+  third: '#9F73AB'
+};
+
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
   
@@ -58,7 +66,7 @@ function setup() {
       major_scale.push(new p5.Oscillator(midiToFreq(item+12*i), 'sine'));
       major_scale_freq.push(item+12*i);
     });
-    [48, 51, 43, 46].forEach(item => {
+    [48, 51, 55, 58].forEach(item => {
       minor_scale.push(new p5.Oscillator(midiToFreq(item+12*i), 'sine'));
       minor_scale_freq.push(item+12*i);
     });
@@ -90,10 +98,10 @@ function iosAccess() {
 }
 
 function drawStartPage() {
-  background('#3F3B6C');
+  background(colorSet.background);
   textSize(100);
   textStyle(BOLDITALIC);
-  fill('#00A6A6');
+  fill(colorSet.text);
   text("PitchPad", canvasWidth/2-200, canvasHeight/2-200);
   
   textSize(50);
@@ -147,7 +155,7 @@ function soundControl() {
 
 function drawGuide() {
   textSize(30);
-  fill('#00A6A6');
+  fill(colorSet.text);
   textStyle(ITALIC);
   text('Interval ->', 50, 130);
   textStyle(ITALIC);
@@ -161,16 +169,16 @@ function drawGuide() {
 function drawTitle() {
   textSize(60);
   textStyle(BOLDITALIC);
-  fill('#00A6A6');
+  fill(colorSet.text);
   text("PitchPad", 20, 70);
 }
 
 function drawScaleGuid() {
-  fill('#3F3B6C');
+  fill(colorSet.background);
   rect(290, 20, 200, 70);
   textSize(40);
   textStyle(ITALIC);
-  fill('#00A6A6');
+  fill(colorSet.text);
   if (isMajor == 1) {
     text("Major Key", 300, 70);  
   } else {
@@ -180,31 +188,31 @@ function drawScaleGuid() {
 
 function drawRotation() {
   strokeWeight(0);
-  fill('#A3C7D6');
+  fill(colorSet.first);
   volume = (rotationX+30)/70;
   rect(canvasWidth - 80, 150, 30, canvasHeight - 230);
-  fill('#624F82')
+  fill(colorSet.second)
   rect(canvasWidth - 80, 150, 30, canvasHeight - 230 - volume*(canvasHeight - 230));
   
   
   if (pitchLock) {
     if (rotationY > 0) {
-      if (additionalFreq < 6) additionalFreq += rotationY/500;
+      if (additionalFreq < 5.8) additionalFreq += rotationY/500;
     } else {
-      if (additionalFreq > -7) additionalFreq += (rotationY/500);
+      if (additionalFreq >= -6) additionalFreq += (rotationY/500);
     }  
   }
   
   
   let fullWidth = canvasWidth - 100;
   strokeWeight(0);
-  fill('#A3C7D6');
+  fill(colorSet.first);
   rect(50, canvasHeight - 110, fullWidth, 30);
-  fill('#624F82')
+  fill(colorSet.second)
   rect(50 + (fullWidth)/2 + additionalFreq*fullWidth/12, canvasHeight - 110, 10, 30);
   
   textSize(30);
-  fill('#00A6A6');
+  fill(colorSet.text);
   textStyle(NORMAL);
   
   text('F#', 48 + (canvasWidth - 100)/2 - fullWidth/12*6, canvasHeight - 120);
@@ -224,7 +232,7 @@ function drawRotation() {
 
 function drawPad() {
   strokeWeight(0);
-  fill('#A3C7D6');
+  fill(colorSet.first);
   var padWidth = canvasWidth-170;
   var padHeight = canvasHeight-300;
   rect(50, 150, padWidth, padHeight);
@@ -240,12 +248,12 @@ function drawPad() {
       let buttonStartY = 170+buttonHeight*i;
       let strokeSize = 10;
       
-      stroke('#A3C7D6');
+      stroke(colorSet.first);
       strokeWeight(strokeSize);
       if (pushedButtons[i*4 + j] === 1) {
-        fill('#9F73AB');
+        fill(colorSet.third);
       } else {
-        fill('#624F82');  
+        fill(colorSet.second);  
       }
       
       rect(buttonStartX, buttonStartY, buttonWidth, buttonHeight);
@@ -285,8 +293,25 @@ function touchEnded() {
 
 function changeKeyButtonPress(touch) {
   if (touch.x > 500 && touch.x < 680 && touch.y > 30 && touch.y < 80) {
-    if (isMajor) isMajor = 0;
-    else isMajor = 1;
+    if (isMajor) {
+      isMajor = 0;
+      colorSet = {
+        text: '#00A6A6',
+        background: '#D8C593',
+        first: '#708160',
+        second: '#DD7631',
+        third: '#BB3B0E'
+      };
+    } else {
+      isMajor = 1;
+      colorSet = {
+        text: '#00A6A6',
+        background: '#3F3B6C',
+        first: '#A3C7D6',
+        second: '#624F82',
+        third: '#9F73AB'
+      }
+    }
   }
 }
 
@@ -342,7 +367,7 @@ function padMouseReleaseController(x, y) {
 
 function drawChangeButton() {
   strokeWeight(0);
-  fill('#00A6A6');
+  fill(colorSet.text);
   rect(500, 30, 180, 50, 20);
   textStyle(BOLD);
   textSize(30);
@@ -352,7 +377,7 @@ function drawChangeButton() {
 
 function drawPitchLockButton() {
   strokeWeight(0);
-  fill('#00A6A6');
+  fill(colorSet.text);
   rect(700, 30, 220, 50, 20);
   textStyle(BOLD);
   textSize(30);
