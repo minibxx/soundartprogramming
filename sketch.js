@@ -47,18 +47,18 @@ let pushedButtons = {
   '15': 0,
 };
 let additionalFreq = 0;
-let pitchLock = false;
+let pitchLock = true;
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
   
   n=0;
   for (let i = 0; i < 4 ; i++) {
-    [36, 40, 43, 47].forEach(item => {
+    [48, 52, 55, 59].forEach(item => {
       major_scale.push(new p5.Oscillator(midiToFreq(item+12*i), 'sine'));
       major_scale_freq.push(item+12*i);
     });
-    [36, 39, 43, 46].forEach(item => {
+    [48, 51, 43, 46].forEach(item => {
       minor_scale.push(new p5.Oscillator(midiToFreq(item+12*i), 'sine'));
       minor_scale_freq.push(item+12*i);
     });
@@ -189,11 +189,13 @@ function drawRotation() {
   
   if (pitchLock) {
     if (rotationY > 180) {
-      if (additionalFreq < 6) additionalFreq += (360 - rotationY)/200;
+      if (additionalFreq < 6) additionalFreq += (360 - rotationY)/500;
     } else {
-      if (additionalFreq > -7) additionalFreq += (rotationY/200)*(-1);
+      if (additionalFreq > -7) additionalFreq += (rotationY/500)*(-1);
     }  
   }
+  console.log(`rotationY: ${rotationY}`);
+  console.log(`accelerationY: ${accelerationY}`);
   
   
   let fullWidth = canvasWidth - 100;
@@ -269,7 +271,6 @@ function touchStarted(){
   } 
   touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
   currentTouches = touches;
-  console.log('touchStarted : ', currentTouches);
   if (permission) {
     return false;  
   }
@@ -279,7 +280,6 @@ function touchEnded() {
   endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
-  console.log('touchEnded : ', endedTouches);
   if (permission) {
     return false;  
   }
@@ -312,7 +312,6 @@ function padMousePressController(x, y) {
     for (let i = 0 ; i < buttonPositions.length ; i++) {
       let buttonPos = buttonPositions[i];
       if (x > buttonPos.startX && x < buttonPos.endX && y > buttonPos.startY && y < buttonPos.endY) {
-        console.log('buttonClicked : ', current_scale[i]);
         scale[i].start();
         pushedButtons[i] = 1;
         break;
@@ -362,4 +361,3 @@ function drawPitchLockButton() {
   fill('#ffffff');  
   text('Pitch Lock', 740, 65);  
 }
-
