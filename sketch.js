@@ -188,14 +188,12 @@ function drawRotation() {
   
   
   if (pitchLock) {
-    if (rotationY > 180) {
-      if (additionalFreq < 6) additionalFreq += (360 - rotationY)/500;
+    if (rotationY > 0) {
+      if (additionalFreq < 6) additionalFreq += rotationY/500;
     } else {
-      if (additionalFreq > -7) additionalFreq += (rotationY/500)*(-1);
+      if (additionalFreq > -7) additionalFreq += (rotationY/500);
     }  
   }
-  console.log(`rotationY: ${rotationY}`);
-  console.log(`accelerationY: ${accelerationY}`);
   
   
   let fullWidth = canvasWidth - 100;
