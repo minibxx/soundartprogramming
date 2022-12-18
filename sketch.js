@@ -72,11 +72,11 @@ function setup() {
     });
   }
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
-    background(63, 59, 108);
+    background(colorSet.background);
     button = createButton('click to iOS Sensor');
     button.mousePressed(iosAccess);   
   } else {
-    background(63, 59, 108);
+    background(colorSet.background);
     text("is not a ios", 100, 100);
     permission = true;
   }
