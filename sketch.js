@@ -19,8 +19,8 @@ let minor_string = ['Cm7', 'Dm7', 'EbM7', 'Fm7', 'Gm7', 'AbM7', 'Bb7'];
 let current_scale = [];
 
 let buttonPositions = [];
-let canvasWidth = window.innerWidth - 30;
-let canvasHeight = window.innerHeight - 100;
+let canvasWidth = window.innerWidth-20;
+let canvasHeight = window.innerHeight-30;
 
 let currentTouches = [];
 let endedTouches = [];
@@ -47,6 +47,7 @@ let pushedButtons = {
   '15': 0,
 };
 let additionalFreq = 0;
+let pitchLock = false;
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
@@ -71,7 +72,6 @@ function setup() {
     text("is not a ios", 100, 100);
     permission = true;
   }
-  polySynth = new p5.PolySynth();
   arpFlag = 0;
 }
 
@@ -117,41 +117,64 @@ function draw() {
   if(n === 1){
     drawPad();
     drawRotation();
-    let scale;
-    if (isMajor == 1) {
-      scale = major_scale;
-    } else {
-      scale = minor_scale;
-    }
-    scale.forEach((item, index) => {
-      item.amp(volume);
-      item.freq(midiToFreq(major_scale_freq[index] + additionalFreq));
-    });
-    textSize(60);
-    textStyle(BOLDITALIC);
-    fill('#00A6A6');
-    text("PitchPad", 20, 70);
     
-    fill('#3F3B6C');
-    rect(290, 20, 200, 70);
-    textSize(40);
-    textStyle(ITALIC);
-    fill('#00A6A6');
-    if (isMajor == 1) {
-      text("Major Key", 300, 70);  
-    } else {
-      text("Minor Key", 300, 70);
-    }
+    soundControl();
     
-    
-    
-//     drawStartButton();
+    drawTitle();
+    drawScaleGuid()
     drawChangeButton();
+    drawPitchLockButton();
     
-    
-//     image(c, 0, 200);
-//     drawKeypoints();
-//     drawChordString();
+    drawGuide();
+  }
+}
+
+function soundControl() {
+  let scale;
+  let scale_freq;
+  if (isMajor == 1) {
+    scale = major_scale;
+    scale_freq = major_scale_freq;
+  } else {
+    scale = minor_scale;
+    scale_freq = minor_scale_freq;
+  }
+  scale.forEach((item, index) => {
+    item.amp(volume);
+    item.freq(midiToFreq(scale_freq[index] + additionalFreq));
+  });
+}
+
+function drawGuide() {
+  textSize(30);
+  fill('#00A6A6');
+  textStyle(ITALIC);
+  text('Interval ->', 50, 130);
+  textStyle(ITALIC);
+  text('O\nc\nt\na\nv\ne\n', 15, 200);
+  textStyle(ITALIC);
+  text('V\no\nl\nu\nm\ne\n', canvasWidth - 32, 200);
+  textStyle(ITALIC);
+  text('Root Pitch', canvasWidth - 200, canvasHeight - 40);
+}
+
+function drawTitle() {
+  textSize(60);
+  textStyle(BOLDITALIC);
+  fill('#00A6A6');
+  text("PitchPad", 20, 70);
+}
+
+function drawScaleGuid() {
+  fill('#3F3B6C');
+  rect(290, 20, 200, 70);
+  textSize(40);
+  textStyle(ITALIC);
+  fill('#00A6A6');
+  if (isMajor == 1) {
+    text("Major Key", 300, 70);  
+  } else {
+    text("Minor Key", 300, 70);
   }
 }
 
@@ -159,18 +182,44 @@ function drawRotation() {
   strokeWeight(0);
   fill('#A3C7D6');
   volume = (rotationX+30)/70;
-  rect(canvasWidth - 100, 200, 30, canvasHeight - 250);
+  rect(canvasWidth - 80, 150, 30, canvasHeight - 230);
   fill('#624F82')
-  rect(canvasWidth - 100, 200, 30, canvasHeight - 250 - volume*(canvasHeight - 250));
+  rect(canvasWidth - 80, 150, 30, canvasHeight - 230 - volume*(canvasHeight - 230));
   
   
+  if (pitchLock) {
+    if (rotationY > 180) {
+      if (additionalFreq < 6) additionalFreq += (360 - rotationY)/200;
+    } else {
+      if (additionalFreq > -7) additionalFreq += (rotationY/200)*(-1);
+    }  
+  }
+  
+  
+  let fullWidth = canvasWidth - 100;
   strokeWeight(0);
   fill('#A3C7D6');
-  if (rotationZ > 180) additionalFreq = (360 - rotationZ)/10;
-  else additionalFreq = (rotationZ/10)*(-1);
-  rect(30, canvasHeight - 70, canvasWidth - 100, 30);
+  rect(50, canvasHeight - 110, fullWidth, 30);
   fill('#624F82')
-  rect(30 + (canvasWidth - 100)/2 + additionalFreq*10, canvasHeight - 70, 10, 30);
+  rect(50 + (fullWidth)/2 + additionalFreq*fullWidth/12, canvasHeight - 110, 10, 30);
+  
+  textSize(30);
+  fill('#00A6A6');
+  textStyle(NORMAL);
+  
+  text('F#', 48 + (canvasWidth - 100)/2 - fullWidth/12*6, canvasHeight - 120);
+  text('G', 48 + (canvasWidth - 100)/2 - fullWidth/12*5, canvasHeight - 120);
+  text('G#', 48 + (canvasWidth - 100)/2 - fullWidth/12*4, canvasHeight - 120);
+  text('A', 48 + (canvasWidth - 100)/2 - fullWidth/12*3, canvasHeight - 120);
+  text('A#', 48 + (canvasWidth - 100)/2 - fullWidth/12*2, canvasHeight - 120);
+  text('B', 48 + (canvasWidth - 100)/2 - fullWidth/12*1, canvasHeight - 120);
+  text('C', 48 + (canvasWidth - 100)/2, canvasHeight - 120);
+  text('C#', 48 + (canvasWidth - 100)/2 + fullWidth/12*1, canvasHeight - 120);
+  text('D', 48 + (canvasWidth - 100)/2 + fullWidth/12*2, canvasHeight - 120);
+  text('D#', 48 + (canvasWidth - 100)/2 + fullWidth/12*3, canvasHeight - 120);
+  text('E', 48 + (canvasWidth - 100)/2 + fullWidth/12*4, canvasHeight - 120);
+  text('F', 48 + (canvasWidth - 100)/2 + fullWidth/12*5, canvasHeight - 120);
+  
 }
 
 function drawPad() {
@@ -178,7 +227,7 @@ function drawPad() {
   fill('#A3C7D6');
   var padWidth = canvasWidth-170;
   var padHeight = canvasHeight-300;
-  rect(30, 200, padWidth, padHeight);
+  rect(50, 150, padWidth, padHeight);
   
   var buttonFrameWidth = padWidth - 40;
   var buttonFrameHeight = padHeight - 40;
@@ -187,8 +236,8 @@ function drawPad() {
     for (var j = 0 ; j < 4 ; j++) {
       let buttonWidth = buttonFrameWidth/4;
       let buttonHeight = buttonFrameHeight/4;
-      let buttonStartX = 50+buttonWidth*j;
-      let buttonStartY = 220+buttonHeight*i;
+      let buttonStartX = 70+buttonWidth*j;
+      let buttonStartY = 170+buttonHeight*i;
       let strokeSize = 10;
       
       stroke('#A3C7D6');
@@ -214,7 +263,10 @@ function drawPad() {
 function touchStarted(){
   getAudioContext().resume();
   startScreenPressController();
-  if(touches[0]) changeKeyButtonPress(touches[0]);
+  if(touches[0]) {
+    changeKeyButtonPress(touches[0]);
+    pitchLockButtonPress(touches[0]);
+  } 
   touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
   currentTouches = touches;
   console.log('touchStarted : ', currentTouches);
@@ -240,6 +292,12 @@ function changeKeyButtonPress(touch) {
   }
 }
 
+function pitchLockButtonPress(touch) {
+  if (touch.x > 700 && touch.x < 920 && touch.y > 30 && touch.y < 80) {
+    pitchLock = !pitchLock
+  }
+}
+
 function padMousePressController(x, y) {
   if (n === 1) {
     let scale;
@@ -255,7 +313,6 @@ function padMousePressController(x, y) {
       let buttonPos = buttonPositions[i];
       if (x > buttonPos.startX && x < buttonPos.endX && y > buttonPos.startY && y < buttonPos.endY) {
         console.log('buttonClicked : ', current_scale[i]);
-        // polySynth.noteAttack(current_scale[i], velocity);
         scale[i].start();
         pushedButtons[i] = 1;
         break;
@@ -278,53 +335,12 @@ function padMouseReleaseController(x, y) {
     for (let i = 0 ; i < buttonPositions.length ; i++) {
       let buttonPos = buttonPositions[i];
       if (x > buttonPos.startX && x < buttonPos.endX && y > buttonPos.startY && y < buttonPos.endY) {
-        // polySynth.noteRelease(current_scale[i]);
         scale[i].stop();
         pushedButtons[i] = 0;
         break;
       }
     }
   }
-}
-
-function drawChordString() {
-  let chords;
-  strokeWeight(0);
-  fill('#F49F0A');
-  rect(0, 150, 1050, 50)
-  
-  if (isMajor == 1) {
-    chords = major_string;
-  } else {
-    chords = minor_string;
-  }
-  
-  for (let i = 0; i < 7; i++) {
-    let width = 1050/7;
-    textSize(40);
-    if (position == i) {
-      fill('#BBDEF0');
-    } else {
-      fill('#00A6A6');  
-    }
-    
-    textStyle(ITALIC);
-    text(chords[i], width*i + 30, 180);
-    if (position == i) {
-      strokeWeight(0);
-      fill('#BBDEF079');
-      rect(width*i, 200, width, 600);
-      
-      let height = 600/4
-      strokeWeight(0);
-      fill('#00A6A699');
-      rect(width*i, ((3 - (arpFlag-1)%4))*height + 200, width, height);
-    }
-  }
-  textStyle(ITALIC);
-  textSize(30);
-  fill('#445E93');
-  text('VOLUME', 1060, 175);
 }
 
 function drawChangeButton() {
@@ -336,3 +352,14 @@ function drawChangeButton() {
   fill('#ffffff');  
   text('Change', 540, 65);  
 }
+
+function drawPitchLockButton() {
+  strokeWeight(0);
+  fill('#00A6A6');
+  rect(700, 30, 220, 50, 20);
+  textStyle(BOLD);
+  textSize(30);
+  fill('#ffffff');  
+  text('Pitch Lock', 740, 65);  
+}
+
