@@ -282,7 +282,7 @@ function touchStarted(){
   } 
   touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
   currentTouches = touches;
-  if (permission) {
+  if (n != -1) {
     return false;  
   }
 }
@@ -291,7 +291,7 @@ function touchEnded() {
   endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
-  if (permission) {
+  if (n != -1) {
     return false;  
   }
 }
