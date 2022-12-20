@@ -93,6 +93,7 @@ function startScreenPressController() {
 function iosAccess() {
   DeviceOrientationEvent.requestPermission().then(response => {
     if (response === 'granted') {
+      console.log('responseGranted');
       button.hide();
       createCanvas(canvasWidth, canvasHeight);
       n=0;
@@ -283,6 +284,7 @@ function touchStarted(){
   touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
   currentTouches = touches;
   if (n == 1) {
+    console.log('touchStarted n:', n);
     return false;  
   }
 }
@@ -292,6 +294,7 @@ function touchEnded() {
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
   if (n == 1) {
+    console.log('touchEnded n:', n);
     return false;  
   }
 }
