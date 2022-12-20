@@ -94,8 +94,8 @@ function iosAccess() {
   DeviceOrientationEvent.requestPermission().then(response => {
     if (response === 'granted') {
       button.hide();
+      createCanvas(canvasWidth, canvasHeight);
       n=0;
-      createCanvas(canvasWidth, canvasHeight);  
     } 
   })
   .catch(console.error);
@@ -127,6 +127,7 @@ function draw() {
     drawStartPage();
   }
   if(n === 1){
+    background(colorSet.background);
     drawPad();
     drawRotation();
     
