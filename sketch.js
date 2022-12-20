@@ -19,6 +19,7 @@ let canvasHeight = window.innerHeight-10;
 let currentTouches = [];
 let endedTouches = [];
 let permission = false;
+let canvas;
 
 let volume = 0;
 let pushedButtons = {
@@ -85,7 +86,7 @@ function setup() {
 
 
 function startScreenPressController() {
-  if (n == 0) {
+  if (n == 0 && canvas) {
     n = 1;
   }
 }
@@ -124,7 +125,7 @@ function modelReady() {
 function draw() {
   if (n === 0) {
     if (button) button.hide();
-    createCanvas(canvasWidth, canvasHeight);
+    canvas = createCanvas(canvasWidth, canvasHeight);
     drawStartPage();
   }
   if(n === 1){
@@ -397,4 +398,3 @@ function drawPitchLockButton() {
   fill('#ffffff');  
   text('Pitch Lock', 740, 65);  
 }
-
