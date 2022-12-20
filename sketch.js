@@ -49,6 +49,7 @@ let colorSet = {
   second: '#624F82',
   third: '#9F73AB'
 };
+let button;
 
 function setup() {  
   
@@ -79,7 +80,6 @@ function setup() {
   } else {
     n = 0;
     text("is not a ios", 100, 100);
-    createCanvas(canvasWidth, canvasHeight);
   }
 }
 
@@ -94,8 +94,6 @@ function iosAccess() {
   DeviceOrientationEvent.requestPermission().then(response => {
     if (response === 'granted') {
       console.log('responseGranted');
-      button.hide();
-      createCanvas(canvasWidth, canvasHeight);
       n=0;
     } 
   })
@@ -125,6 +123,8 @@ function modelReady() {
 
 function draw() {
   if (n === 0) {
+    if (button) button.hide();
+    createCanvas(canvasWidth, canvasHeight);
     drawStartPage();
   }
   if(n === 1){
@@ -275,6 +275,7 @@ function drawPad() {
 }
 
 function touchStarted(){
+  console.log('touchStarted n:', n);
   getAudioContext().resume();
   startScreenPressController();
   if(touches[0]) {
@@ -284,17 +285,16 @@ function touchStarted(){
   touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
   currentTouches = touches;
   if (n == 1) {
-    console.log('touchStarted n:', n);
     return false;  
   }
 }
 
 function touchEnded() {
+  console.log('touchEnded n:', n);
   endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
   endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
   currentTouches = touches;
   if (n == 1) {
-    console.log('touchEnded n:', n);
     return false;  
   }
 }
@@ -393,3 +393,4 @@ function drawPitchLockButton() {
   fill('#ffffff');  
   text('Pitch Lock', 740, 65);  
 }
+
