@@ -85,7 +85,7 @@ function setup() {
 
 
 function startScreenPressController() {
-  if (n != 1) {
+  if (n == 0) {
     n = 1;
   }
 }
@@ -276,26 +276,30 @@ function drawPad() {
 
 function touchStarted(){
   console.log('touchStarted n:', n);
-  getAudioContext().resume();
-  startScreenPressController();
-  if(touches[0]) {
-    changeKeyButtonPress(touches[0]);
-    pitchLockButtonPress(touches[0]);
-  } 
-  touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
-  currentTouches = touches;
-  if (n == 1) {
-    return false;  
+  if (n != -1) {
+    getAudioContext().resume();
+    startScreenPressController();
+    if(touches[0]) {
+      changeKeyButtonPress(touches[0]);
+      pitchLockButtonPress(touches[0]);
+    } 
+    touches.filter(item => currentTouches.findIndex(touch => touch.id === item.id) < 0).forEach(item => padMousePressController(item.x, item.y));
+    currentTouches = touches;
+    if (n == 1) {
+      return false;  
+    } 
   }
 }
 
 function touchEnded() {
   console.log('touchEnded n:', n);
-  endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
-  endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
-  currentTouches = touches;
-  if (n == 1) {
-    return false;  
+  if (n != -1) {
+    endedTouches = currentTouches.filter(item => touches.findIndex(touch => touch.id === item.id) < 0);
+    endedTouches.forEach(item => padMouseReleaseController(item.x, item.y));
+    currentTouches = touches;
+    if (n == 1) {
+      return false;  
+    }
   }
 }
 
