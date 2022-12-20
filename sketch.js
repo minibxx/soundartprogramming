@@ -162,13 +162,13 @@ function drawGuide() {
   textSize(30);
   fill(colorSet.text);
   textStyle(ITALIC);
-  text('Interval ->', 50, 130);
+  text('Interval ->', 50, canvasHeight - 50);
   textStyle(ITALIC);
-  text('O\nc\nt\na\nv\ne\n', 15, 200);
+  text('O\nc\nt\na\nv\ne\n', 15, 250);
   textStyle(ITALIC);
   text('V\no\nl\nu\nm\ne\n', canvasWidth - 32, 200);
   textStyle(ITALIC);
-  text('Root Pitch', canvasWidth - 200, canvasHeight - 40);
+  text('Root Pitch', canvasWidth - 200, 120);
 }
 
 function drawTitle() {
@@ -211,27 +211,27 @@ function drawRotation() {
   
   let fullWidth = canvasWidth - 100;
   strokeWeight(0);
-  fill(colorSet.first);
-  rect(50, canvasHeight - 110, fullWidth, 30);
-  fill(colorSet.second)
-  rect(50 + (fullWidth)/2 + additionalFreq*fullWidth/12, canvasHeight - 110, 10, 30);
+  fill(colorSet.second);
+  rect(50, 140, fullWidth, 30);
+  fill(colorSet.first)
+  rect(50 + (fullWidth)/2 + additionalFreq*fullWidth/12, 140, 10, 30);
   
-  textSize(30);
+  textSize(25);
   fill(colorSet.text);
-  textStyle(NORMAL);
+  textStyle(BOLD);
   
-  text('F#', 48 + (canvasWidth - 100)/2 - fullWidth/12*6, canvasHeight - 120);
-  text('G', 48 + (canvasWidth - 100)/2 - fullWidth/12*5, canvasHeight - 120);
-  text('G#', 48 + (canvasWidth - 100)/2 - fullWidth/12*4, canvasHeight - 120);
-  text('A', 48 + (canvasWidth - 100)/2 - fullWidth/12*3, canvasHeight - 120);
-  text('A#', 48 + (canvasWidth - 100)/2 - fullWidth/12*2, canvasHeight - 120);
-  text('B', 48 + (canvasWidth - 100)/2 - fullWidth/12*1, canvasHeight - 120);
-  text('C', 48 + (canvasWidth - 100)/2, canvasHeight - 120);
-  text('C#', 48 + (canvasWidth - 100)/2 + fullWidth/12*1, canvasHeight - 120);
-  text('D', 48 + (canvasWidth - 100)/2 + fullWidth/12*2, canvasHeight - 120);
-  text('D#', 48 + (canvasWidth - 100)/2 + fullWidth/12*3, canvasHeight - 120);
-  text('E', 48 + (canvasWidth - 100)/2 + fullWidth/12*4, canvasHeight - 120);
-  text('F', 48 + (canvasWidth - 100)/2 + fullWidth/12*5, canvasHeight - 120);
+  text('F#', 48 + (canvasWidth - 100)/2 - fullWidth/12*6 + 5, 165);
+  text('G', 48 + (canvasWidth - 100)/2 - fullWidth/12*5, 165);
+  text('G#', 48 + (canvasWidth - 100)/2 - fullWidth/12*4, 165);
+  text('A', 48 + (canvasWidth - 100)/2 - fullWidth/12*3, 165);
+  text('A#', 48 + (canvasWidth - 100)/2 - fullWidth/12*2, 165);
+  text('B', 48 + (canvasWidth - 100)/2 - fullWidth/12*1, 165);
+  text('C', 48 + (canvasWidth - 100)/2, 165);
+  text('C#', 48 + (canvasWidth - 100)/2 + fullWidth/12*1, 165);
+  text('D', 48 + (canvasWidth - 100)/2 + fullWidth/12*2, 165);
+  text('D#', 48 + (canvasWidth - 100)/2 + fullWidth/12*3, 165);
+  text('E', 48 + (canvasWidth - 100)/2 + fullWidth/12*4, 165);
+  text('F', 48 + (canvasWidth - 100)/2 + fullWidth/12*5, 165);
   
 }
 
@@ -240,7 +240,7 @@ function drawPad() {
   fill(colorSet.first);
   var padWidth = canvasWidth-170;
   var padHeight = canvasHeight-300;
-  rect(50, 150, padWidth, padHeight);
+  rect(50, 220, padWidth, padHeight);
   
   var buttonFrameWidth = padWidth - 40;
   var buttonFrameHeight = padHeight - 40;
@@ -250,7 +250,7 @@ function drawPad() {
       let buttonWidth = buttonFrameWidth/4;
       let buttonHeight = buttonFrameHeight/4;
       let buttonStartX = 70+buttonWidth*j;
-      let buttonStartY = 170+buttonHeight*i;
+      let buttonStartY = 240+buttonHeight*i;
       let strokeSize = 10;
       
       stroke(colorSet.first);
