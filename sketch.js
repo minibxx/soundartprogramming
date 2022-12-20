@@ -1,11 +1,5 @@
 var n;
-var oscil;
-var position;
-var sloop;
-var arpflag;
 
-let poseNet;
-let poses = [];
 let isMajor = 1;
 
 let major_scale = [];
@@ -56,10 +50,8 @@ let colorSet = {
   third: '#9F73AB'
 };
 
-function setup() {
-  createCanvas(canvasWidth, canvasHeight);
+function setup() {  
   
-  n=0;
   for (let i = 0; i < 4 ; i++) {
     [48, 52, 55, 59].forEach(item => {
       major_scale.push(new p5.Oscillator(midiToFreq(item+12*i), 'sine'));
@@ -70,15 +62,25 @@ function setup() {
       minor_scale_freq.push(item+12*i);
     });
   }
+  
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
-    // background(colorSet.background);
     n = -1;
+    button = createButton('Click to iOS Sensor');
+    button.style('font-size', '70px');
+    button.style('padding', '30px');
+    button.style('border', 'none');
+    button.style('background-color', colorSet.background);
+    button.style('font-style', 'italic');
+    button.style('font-weight', 'bold');
+    button.style('color', colorSet.text);
+    button.style('border-radius', '20px');
+    button.position(canvasWidth/2 - 280, canvasHeight/2 - 100);
+    button.mousePressed(iosAccess);
   } else {
-    // background(colorSet.background);
-    text("is not a ios", 100, 100);
     n = 0;
+    text("is not a ios", 100, 100);
+    createCanvas(canvasWidth, canvasHeight);
   }
-  arpFlag = 0;
 }
 
 
@@ -90,7 +92,11 @@ function startScreenPressController() {
 
 function iosAccess() {
   DeviceOrientationEvent.requestPermission().then(response => {
-    if (response === 'granted') n = 0;
+    if (response === 'granted') {
+      button.hide();
+      n=0;
+      createCanvas(canvasWidth, canvasHeight);  
+    } 
   })
   .catch(console.error);
 }
@@ -117,7 +123,6 @@ function modelReady() {
 
 
 function draw() {
-  if (n === -1) iosAccess();
   if (n === 0) {
     drawStartPage();
   }
@@ -384,3 +389,4 @@ function drawPitchLockButton() {
   fill('#ffffff');  
   text('Pitch Lock', 740, 65);  
 }
+
