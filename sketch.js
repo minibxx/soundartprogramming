@@ -301,8 +301,8 @@ function changeKeyButtonPress(touch) {
       isMajor = 0;
       colorSet = {
         text: '#00A6A6',
-        // background: '#D8C593',
-        background: '#3F3B6C',
+        background: '#D8C593',
+        // background: '#3F3B6C',
         first: '#708160',
         second: '#DD7631',
         third: '#BB3B0E'
@@ -389,4 +389,3 @@ function drawPitchLockButton() {
   fill('#ffffff');  
   text('Pitch Lock', 740, 65);  
 }
-
