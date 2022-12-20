@@ -27,7 +27,6 @@ let endedTouches = [];
 let permission = false;
 
 let volume = 0;
-let env = new p5.Envelope();
 let pushedButtons = {
   '0': 0,
   '1': 0,
@@ -73,26 +72,25 @@ function setup() {
   }
   if (typeof DeviceMotionEvent.requestPermission === 'function') {
     // background(colorSet.background);
-    button = createButton('click to iOS Sensor');
-    button.mousePressed(iosAccess);   
+    n = -1;
   } else {
     // background(colorSet.background);
     text("is not a ios", 100, 100);
-    permission = true;
+    n = 0;
   }
   arpFlag = 0;
 }
 
 
 function startScreenPressController() {
-  if (n != 1 && permission) {
+  if (n != 1) {
     n = 1;
   }
 }
 
 function iosAccess() {
   DeviceOrientationEvent.requestPermission().then(response => {
-    if (response === 'granted') permission = true;
+    if (response === 'granted') n = 0;
   })
   .catch(console.error);
 }
@@ -119,7 +117,8 @@ function modelReady() {
 
 
 function draw() {
-  if (n === 0 && permission) {
+  if (n === -1) iosAccess();
+  if (n === 0) {
     drawStartPage();
   }
   if(n === 1){
