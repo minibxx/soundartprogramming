@@ -13,8 +13,8 @@ let minor_string = ['Cm7', 'Dm7', 'EbM7', 'Fm7', 'Gm7', 'AbM7', 'Bb7'];
 let current_scale = [];
 
 let buttonPositions = [];
-let canvasWidth = window.innerWidth;
-let canvasHeight = window.innerHeight;
+let canvasWidth = window.innerWidth-5;
+let canvasHeight = window.innerHeight-10;
 
 let currentTouches = [];
 let endedTouches = [];
